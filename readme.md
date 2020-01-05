@@ -1,6 +1,8 @@
 # Overview
 
-Updated Mail-listener2 library for node.js. Get notification when new email arrived to inbox or when message metadata (e.g. flags) changes externally. Uses IMAP protocol.
+Fixed version for Liza.
+
+Get notification when new email arrived to inbox or when message metadata (e.g. flags) changes externally. Uses IMAP protocol.
 
 Updated Mail-listener2 includes changes and improvements from another forks.
 
