@@ -1,5 +1,5 @@
 {
-  "name": "mail-listener2-updated",
+  "name": "mail-listener",
   "version": "0.3.3",
   "description": "Updated Mail listener library for node.js. Get notification when new email arrived.",
   "dependencies": {
@@ -10,9 +10,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/dapanas/mail-listener2.git"
+    "url": "git://github.com/lizachat/mail-listener.git"
   },
-  "homepage": "https://github.com/dapanas/mail-listener2",
+  "homepage": "https://github.com/lizachat/mail-listener",
   "keywords": [
     "mail",
     "job",
