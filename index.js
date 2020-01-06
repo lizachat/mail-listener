@@ -11,7 +11,10 @@ module.exports = MailListener;
 function MailListener(options) {
   this.haveNewEmails = false;
   this.parsingUnread = false;
-  this.markSeen = !!options.markSeen;
+
+  this.markSeen = false;
+  //this.markSeen = !!options.markSeen;
+
   this.mailbox = options.mailbox || "INBOX";
   if ('string' === typeof options.searchFilter) {
     this.searchFilter = [options.searchFilter];
