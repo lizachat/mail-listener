@@ -113,10 +113,16 @@ function parseUnread() {
 
 
       async.each(results, function (result, callback) {
+
+        // never mark seen
         var f = self.imap.fetch(result, {
           bodies: '',
-          markSeen: self.markSeen
+          markSeen: false
         });
+/*         var f = self.imap.fetch(result, {
+          bodies: '',
+          markSeen: self.markSeen
+        }); */
         f.on('message', function(msg, seqno) {
           var parser = new MailParser(self.mailParserOptions);
           var attributes = null;
@@ -124,9 +130,17 @@ function parseUnread() {
 
           parser.on("end", function(mail) {
             mail.eml = emlbuffer.toString('utf-8');
-            if (!self.mailParserOptions.streamAttachments && mail.attachments && self.attachments) {
+
+            // ignore attachments settings (self.attachments)
+            if (!self.mailParserOptions.streamAttachments && mail.attachments) {
+            //if (!self.mailParserOptions.streamAttachments && mail.attachments && self.attachments) {
+
               async.each(mail.attachments, function( attachment, callback) {
-                fs.writeFile(self.attachmentOptions.directory + attachment.generatedFileName, attachment.content, function(err) {
+                attachment.path = path.resolve(self.attachmentOptions.directory, attachment.generatedFileName);
+                self.emit('attachment', attachment);
+                callback()
+
+                /* fs.writeFile(self.attachmentOptions.directory + attachment.generatedFileName, attachment.content, function(err) {
                   if(err) {
                     self.emit('error', err);
                     callback()
@@ -135,7 +149,8 @@ function parseUnread() {
                     self.emit('attachment', attachment);
                     callback()
                   }
-                });
+                }); */
+
               }, function(err){
                 self.emit('mail', mail, seqno, attributes);
                 callback()
