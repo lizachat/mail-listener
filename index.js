@@ -59,11 +59,8 @@ MailListener.prototype.stop = function() {
 };
 
 MailListener.prototype.restart = function() {
-  console.log('detaching existing listener');
   this.imap.removeAllListeners('mail');
   this.imap.removeAllListeners('update');
-
-  console.log('calling imap connect');
   this.imap.connect();
 };
 
@@ -108,11 +105,11 @@ function parseUnread() {
       self.emit('error', err);
     } else if (results.length > 0) {
       
-      self.imap.setFlags(results, ['\\Seen'], function (err) {
+      /* self.imap.setFlags(results, ['\\Seen'], function (err) {
         if (err) {
           console.log(JSON.stringify(err, null, 2));
         }
-      });
+      }); */
 
 
       async.each(results, function (result, callback) {
@@ -133,17 +130,19 @@ function parseUnread() {
 
           parser.on("end", function(mail) {
             mail.eml = emlbuffer.toString('utf-8');
+            self.emit('mail',mail,seqno,attributes);
+            callback();
 
             // ignore attachments settings (self.attachments)
-            if (!self.mailParserOptions.streamAttachments && mail.attachments) {
+            //if (!self.mailParserOptions.streamAttachments && mail.attachments) {
             //if (!self.mailParserOptions.streamAttachments && mail.attachments && self.attachments) {
 
-              async.each(mail.attachments, function( attachment, callback) {
+              /* async.each(mail.attachments, function( attachment, callback) {
                 attachment.path = path.resolve(self.attachmentOptions.directory, attachment.generatedFileName);
                 self.emit('attachment', attachment);
                 callback()
 
-                /* fs.writeFile(self.attachmentOptions.directory + attachment.generatedFileName, attachment.content, function(err) {
+                fs.writeFile(self.attachmentOptions.directory + attachment.generatedFileName, attachment.content, function(err) {
                   if(err) {
                     self.emit('error', err);
                     callback()
@@ -152,7 +151,7 @@ function parseUnread() {
                     self.emit('attachment', attachment);
                     callback()
                   }
-                }); */
+                });
 
               }, function(err){
                 self.emit('mail', mail, seqno, attributes);
@@ -161,7 +160,7 @@ function parseUnread() {
             } else {
               self.emit('mail',mail,seqno,attributes);
               callback();
-            }
+            } */
           });
           parser.on("attachment", function (attachment, email) {
             self.emit('attachment', attachment, email);
@@ -183,7 +182,6 @@ function parseUnread() {
           self.emit('error', err);
         });
       }, function (err) {
-        console.log('all process');
         if (err) {
           self.emit('error', err);
         }
